@@ -343,6 +343,9 @@ int8_t pin_tft_mosi; // SPI pins
 int8_t pin_tft_miso;
 int8_t pin_tft_clk;
 int8_t pin_tft_cs;
+int8_t pin_tft_cs_2;
+int8_t pin_tft_cs_3;
+int8_t pin_tft_cs_4;
 
 int8_t pin_tft_dc;   // Control pins
 int8_t pin_tft_rd;
@@ -362,6 +365,9 @@ int8_t pin_tft_led;
 int8_t pin_tft_led_on;
 
 int8_t pin_tch_cs;   // Touch chip select pin
+int8_t pin_tch_cs_2;
+int8_t pin_tch_cs_3;
+int8_t pin_tch_cs_4;
 
 int16_t tft_spi_freq;// TFT write SPI frequency
 int16_t tft_rd_freq; // TFT read  SPI frequency
@@ -378,6 +384,16 @@ swap_coord(T& a, T& b) { T t = a; a = b; b = t; }
 // Callback prototype for smooth font pixel colour read
 typedef uint16_t (*getColorCallback)(uint16_t x, uint16_t y);
 
+/***************************************************************************************
+**                         Section Kitecraft: Multi-display & multi-touch support
+***************************************************************************************/
+#define TFT_DISPLAY_1 0x01
+#define TFT_DISPLAY_2 0x02
+#define TFT_DISPLAY_3 0x04
+#define TFT_DISPLAY_4 0x08
+#define TFT_DISPLAY_ALL 0XFF
+
+
 // Class functions and variables
 class TFT_eSPI : public Print { friend class TFT_eSprite; // Sprite class has access to protected members
 
@@ -389,6 +405,10 @@ class TFT_eSPI : public Print { friend class TFT_eSprite; // Sprite class has ac
   // init() and begin() are equivalent, begin() included for backwards compatibility
   // Sketch defined tab colour option is for ST7735 displays only
   void     init(uint8_t tc = TAB_COLOUR), begin(uint8_t tc = TAB_COLOUR);
+
+  // Kitecraft
+  void  setActiveDisplay(byte inDisplay) { active_tft_display = inDisplay; }
+  void setActiveTouchDisplay(byte inDisplay) { active_touch_display = inDisplay; }
 
   // These are virtual so the TFT_eSprite class can override them with sprite specific functions
   virtual void     drawPixel(int32_t x, int32_t y, uint32_t color),
@@ -698,6 +718,15 @@ class TFT_eSPI : public Print { friend class TFT_eSprite; // Sprite class has ac
 
  //--------------------------------------- private ------------------------------------//
  private:
+     //kitecraft
+    byte active_tft_display = 0x00;
+    byte active_touch_display = 0x00;
+
+    inline void active_tft_display_begin() __attribute__((always_inline));
+    inline void active_tft_display_end() __attribute__((always_inline));
+    inline void active_touch_display_begin() __attribute__((always_inline));
+    inline void active_touch_display_end() __attribute__((always_inline));
+
            // Legacy begin and end prototypes - deprecated TODO: delete
   void     spi_begin();
   void     spi_end();

@@ -53,6 +53,106 @@
                                                        \
   if (dw < 1 || dh < 1) return;
 
+/*  Kitecraft  */
+inline void TFT_eSPI::active_tft_display_begin(void) {
+    if (active_tft_display & TFT_DISPLAY_1)
+    {
+        CS_1_L;
+    }
+#if defined(TFT_CS_2)
+    if (active_tft_display & TFT_DISPLAY_2)
+    {
+        CS_2_L;
+    }
+#endif
+#if defined(TFT_CS_3)
+    if (active_tft_display & TFT_DISPLAY_3)
+    {
+        CS_3_L;
+    }
+#endif
+#if defined(TFT_CS_4)
+    if (active_tft_display & TFT_DISPLAY_4)
+    {
+        CS_4_L;
+    }
+#endif
+}
+
+inline void TFT_eSPI::active_tft_display_end(void) {
+    if (active_tft_display & TFT_DISPLAY_1)
+    {
+        CS_1_H;
+    }
+#if defined(TFT_CS_2)
+    if (active_tft_display & TFT_DISPLAY_2)
+    {
+        CS_2_H;
+    }
+#endif
+#if defined(TFT_CS_3)
+    if (active_tft_display & TFT_DISPLAY_3)
+    {
+        CS_3_H;
+    }
+#endif
+#if defined(TFT_CS_4)
+    if (active_tft_display & TFT_DISPLAY_4)
+    {
+        CS_4_H;
+    }
+#endif
+}
+inline void TFT_eSPI::active_touch_display_begin(void) {
+    if (active_touch_display & TFT_DISPLAY_1)
+    {
+        T_CS_1_L;
+    }
+#if defined(TOUCH_CS_2)
+    if (active_touch_display & TFT_DISPLAY_2)
+    {
+        T_CS_2_L;
+    }
+#endif
+#if defined(TOUCH_CS_3)
+    if (active_touch_display & TFT_DISPLAY_3)
+    {
+        T_CS_3_L;
+    }
+#endif
+#if defined(TOUCH_CS_3)
+    if (active_touch_display & TFT_DISPLAY_4)
+    {
+        T_CS_4_L;
+    }
+#endif
+}
+
+inline void TFT_eSPI::active_touch_display_end(void) {
+    if (active_touch_display & TFT_DISPLAY_1)
+    {
+        T_CS_1_H;
+    }
+#if defined(TOUCH_CS_2)
+    if (active_touch_display & TFT_DISPLAY_2)
+    {
+        T_CS_2_H;
+    }
+#endif
+#if defined(TOUCH_CS_3)
+    if (active_touch_display & TFT_DISPLAY_3)
+    {
+        T_CS_3_H;
+    }
+#endif
+#if defined(TOUCH_CS_4)
+    if (active_touch_display & TFT_DISPLAY_4)
+    {
+        T_CS_4_H;
+    }
+#endif
+}
+
 /***************************************************************************************
 ** Function name:           begin_tft_write (was called spi_begin)
 ** Description:             Start SPI transaction for writes and select TFT
@@ -376,10 +476,38 @@ TFT_eSPI::TFT_eSPI(int16_t w, int16_t h)
   digitalWrite(TFT_CS, HIGH); // Chip select high (inactive)
 #endif
 
+//Kitecraft
+#ifdef TFT_CS_2
+  pinMode(TFT_CS_2, OUTPUT);
+  digitalWrite(TFT_CS_2, HIGH); // Chip select high (inactive)
+#endif
+#ifdef TFT_CS_3
+  pinMode(TFT_CS_3, OUTPUT);
+  digitalWrite(TFT_CS_3, HIGH); // Chip select high (inactive)
+#endif
+#ifdef TFT_CS_4
+  pinMode(TFT_CS_4, OUTPUT);
+  digitalWrite(TFT_CS_4, HIGH); // Chip select high (inactive)
+#endif
+
 // Configure chip select for touchscreen controller if present
 #ifdef TOUCH_CS
   pinMode(TOUCH_CS, OUTPUT);
   digitalWrite(TOUCH_CS, HIGH); // Chip select high (inactive)
+#endif
+
+// Kitecraft
+#ifdef TOUCH_CS_2
+  pinMode(TOUCH_CS_2, OUTPUT);
+  digitalWrite(TOUCH_CS_2, HIGH); // Chip select high (inactive)
+#endif
+#ifdef TOUCH_CS_3
+  pinMode(TOUCH_CS_3, OUTPUT);
+  digitalWrite(TOUTOUCH_CS_3CH_CS_2, HIGH); // Chip select high (inactive)
+#endif
+#ifdef TOUCH_CS_4
+  pinMode(TOUCH_CS_4, OUTPUT);
+  digitalWrite(TOUCH_CS_4, HIGH); // Chip select high (inactive)
 #endif
 
 #ifdef TFT_WR
@@ -571,6 +699,46 @@ void TFT_eSPI::init(uint8_t tc)
   // Set to output once again in case ESP8266 D6 (MISO) is used for CS
   pinMode(TFT_CS, OUTPUT);
   digitalWrite(TFT_CS, HIGH); // Chip select high (inactive)
+
+          //Kitecraft
+#ifdef TFT_CS_2
+  pinMode(TFT_CS_2, OUTPUT);
+  digitalWrite(TFT_CS_2, HIGH); // Chip select high (inactive)
+#endif
+#ifdef TFT_CS_3
+  pinMode(TFT_CS_3, OUTPUT);
+  digitalWrite(TFT_CS_3, HIGH); // Chip select high (inactive)
+#endif
+#ifdef TFT_CS_4
+  pinMode(TFT_CS_4, OUTPUT);
+  digitalWrite(TFT_CS_4, HIGH); // Chip select high (inactive)
+#endif
+
+
+// Configure chip select for touchscreen controller if present
+#if defined(TOUCH_CS)
+  pinMode(TOUCH_CS, OUTPUT);
+  digitalWrite(TOUCH_CS, HIGH); // Chip select high (inactive)
+
+        // Kitecraft
+    #ifdef TOUCH_CS_2
+      pinMode(TOUCH_CS_2, OUTPUT);
+      digitalWrite(TOUCH_CS_2, HIGH); // Chip select high (inactive)
+    #endif
+    #ifdef TOUCH_CS_3
+      pinMode(TOUCH_CS_3, OUTPUT);
+      digitalWrite(TOUTOUCH_CS_3CH_CS_2, HIGH); // Chip select high (inactive)
+    #endif
+    #ifdef TOUCH_CS_4
+      pinMode(TOUCH_CS_4, OUTPUT);
+      digitalWrite(TOUCH_CS_4, HIGH); // Chip select high (inactive)
+    #endif
+#endif
+
+  setActiveDisplay(TFT_DISPLAY_ALL);
+  setActiveTouchDisplay(TFT_DISPLAY_ALL);
+
+
 #elif defined (ESP8266) && !defined (TFT_PARALLEL_8_BIT)
   spi.setHwCs(1); // Use hardware SS toggling
 #endif
@@ -4906,6 +5074,24 @@ void TFT_eSPI::getSetup(setup_t &tft_settings)
   tft_settings.pin_tft_cs   = -1;
 #endif
 
+  //Kitecraft
+#if defined (TFT_CS_2)
+  tft_settings.pin_tft_cs_2 = TFT_CS_2;
+#else
+  tft_settings.pin_tft_cs_2 = -1;
+#endif
+#if defined (TFT_CS_3)
+  tft_settings.pin_tft_cs_3 = TFT_CS_3;
+#else
+  tft_settings.pin_tft_cs_3 = -1;
+#endif
+#if defined (TFT_CS_4)
+  tft_settings.pin_tft_cs_4 = TFT_CS_4;
+#else
+  tft_settings.pin_tft_cs_4 = -1;
+#endif
+
+
 #if defined (TFT_DC)
   tft_settings.pin_tft_dc  = TFT_DC;
 #else
@@ -4961,6 +5147,22 @@ void TFT_eSPI::getSetup(setup_t &tft_settings)
 #if defined (TOUCH_CS)
   tft_settings.pin_tch_cs   = TOUCH_CS;
   tft_settings.tch_spi_freq = SPI_TOUCH_FREQUENCY/100000;
+      // KITECRAFT
+    #if defined (TOUCH_CS_2)
+      tft_settings.pin_tch_cs_2 = TOUCH_CS_2;
+    #else
+      tft_settings.pin_tch_cs_2 = -1;
+    #endif
+    #if defined (TOUCH_CS_3)
+      tft_settings.pin_tch_cs_3 = TOUCH_CS_3;
+    #else
+      tft_settings.pin_tch_cs_3 = -1;
+    #endif
+    #if defined (TOUCH_CS_4)
+      tft_settings.pin_tch_cs_$ = TOUCH_CS_$;
+    #else
+      tft_settings.pin_tch_cs_4 = -1;
+    #endif
 #else
   tft_settings.pin_tch_cs   = -1;
   tft_settings.tch_spi_freq = 0;

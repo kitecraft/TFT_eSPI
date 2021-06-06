@@ -173,8 +173,34 @@
         #define CS_L GPIO.out_w1ts = (1 << TFT_CS); GPIO.out_w1tc = (1 << TFT_CS)
         #define CS_H GPIO.out_w1tc = (1 << TFT_CS); GPIO.out_w1ts = (1 << TFT_CS)
       #else
-        #define CS_L GPIO.out_w1tc = (1 << TFT_CS); GPIO.out_w1tc = (1 << TFT_CS)
-        #define CS_H GPIO.out_w1ts = (1 << TFT_CS)//;GPIO.out_w1ts = (1 << TFT_CS)
+        //#define CS_L GPIO.out_w1tc = (1 << TFT_CS); GPIO.out_w1tc = (1 << TFT_CS)
+        //#define CS_H GPIO.out_w1ts = (1 << TFT_CS)//;GPIO.out_w1ts = (1 << TFT_CS)
+        #define CS_L active_tft_display_begin()
+        #define CS_H active_tft_display_end()
+        #define CS_1_L GPIO.out_w1tc = (1 << TFT_CS); GPIO.out_w1tc = (1 << TFT_CS)
+        #define CS_1_H GPIO.out_w1ts = (1 << TFT_CS)//;GPIO.out_w1ts = (1 << TFT_CS)
+
+        #if defined (TFT_CS_2)
+            #define CS_2_L GPIO.out_w1tc = (1 << TFT_CS_2); GPIO.out_w1tc = (1 << TFT_CS_2)
+            #define CS_2_H GPIO.out_w1ts = (1 << TFT_CS_2)//;GPIO.out_w1ts = (1 << TFT_CS)
+        #else
+            #define CS_2_L
+            #define CS_2_H
+        #endif
+        #if defined (TFT_CS_3)
+            #define CS_3_L GPIO.out_w1tc = (1 << TFT_CS_3); GPIO.out_w1tc = (1 << TFT_CS_3)
+            #define CS_3_H GPIO.out_w1ts = (1 << TFT_CS_3)//;GPIO.out_w1ts = (1 << TFT_CS)
+        #else
+            #define CS_3_L
+            #define CS_3_H
+        #endif
+        #if defined (TFT_CS_4)
+            #define CS_4_L GPIO.out_w1tc = (1 << TFT_CS_4); GPIO.out_w1tc = (1 << TFT_CS_3)
+            #define CS_4_H GPIO.out_w1ts = (1 << TFT_CS_4)//;GPIO.out_w1ts = (1 << TFT_CS)
+        #else
+            #define CS_4_L
+            #define CS_4_H
+        #endif
       #endif
     #else
       #define CS_L
@@ -211,8 +237,37 @@
   #define T_CS_L // No macro allocated so it generates no code
   #define T_CS_H // No macro allocated so it generates no code
 #else // XPT2046 is slow, so use slower digitalWrite here
-  #define T_CS_L digitalWrite(TOUCH_CS, LOW)
-  #define T_CS_H digitalWrite(TOUCH_CS, HIGH)
+// KITECRAFT
+    //#define T_CS_L digitalWrite(TOUCH_CS, LOW)
+    //#define T_CS_H digitalWrite(TOUCH_CS, HIGH)
+    #define T_CS_L active_touch_display_begin()
+    #define T_CS_H active_touch_display_end()
+    #define T_CS_1_L digitalWrite(TOUCH_CS, LOW)
+    #define T_CS_1_H digitalWrite(TOUCH_CS, HIGH)
+
+    #if defined(TOUCH_CS_2)
+        #define T_CS_2_L digitalWrite(TOUCH_CS_2, LOW)
+        #define T_CS_2_H digitalWrite(TOUCH_CS_2, HIGH)
+    #else
+        #define T_CS_2_L
+        #define T_CS_2_H
+    #endif
+    #if defined(TOUCH_CS_3)
+        #define T_CS_3_L digitalWrite(TOUCH_CS_3, LOW)
+        #define T_CS_3_H digitalWrite(TOUCH_CS_3, HIGH)
+    #else
+        #define T_CS_3_L
+        #define T_CS_3_H
+    #endif
+    #if defined(TOUCH_CS_4)
+        #define T_CS_4_L digitalWrite(TOUCH_CS_4, LOW)
+        #define T_CS_4_H digitalWrite(TOUCH_CS_4, HIGH)
+    #else
+        #define T_CS_4_L
+        #define T_CS_4_H
+    #endif
+
+
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////
