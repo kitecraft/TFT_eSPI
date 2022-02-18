@@ -104,10 +104,13 @@ inline void TFT_eSPI::active_tft_display_end(void) {
 #endif
 }
 inline void TFT_eSPI::active_touch_display_begin(void) {
+	
+#if defined(TOUCH_CS_1)
     if (active_touch_display & TFT_DISPLAY_1)
     {
         T_CS_1_L;
     }
+#endif
 #if defined(TOUCH_CS_2)
     if (active_touch_display & TFT_DISPLAY_2)
     {
@@ -129,10 +132,12 @@ inline void TFT_eSPI::active_touch_display_begin(void) {
 }
 
 inline void TFT_eSPI::active_touch_display_end(void) {
+#if defined(TOUCH_CS_1)
     if (active_touch_display & TFT_DISPLAY_1)
     {
         T_CS_1_H;
     }
+#endif
 #if defined(TOUCH_CS_2)
     if (active_touch_display & TFT_DISPLAY_2)
     {
@@ -503,7 +508,7 @@ TFT_eSPI::TFT_eSPI(int16_t w, int16_t h)
 #endif
 #ifdef TOUCH_CS_3
   pinMode(TOUCH_CS_3, OUTPUT);
-  digitalWrite(TOUTOUCH_CS_3CH_CS_2, HIGH); // Chip select high (inactive)
+  digitalWrite(TOUCH_CS_3, HIGH); // Chip select high (inactive)
 #endif
 #ifdef TOUCH_CS_4
   pinMode(TOUCH_CS_4, OUTPUT);
@@ -693,8 +698,6 @@ void TFT_eSPI::init(uint8_t tc)
 
     INIT_TFT_DATA_BUS;
 
-
-
 #ifdef TFT_CS
   // Set to output once again in case ESP8266 D6 (MISO) is used for CS
   pinMode(TFT_CS, OUTPUT);
@@ -727,7 +730,7 @@ void TFT_eSPI::init(uint8_t tc)
     #endif
     #ifdef TOUCH_CS_3
       pinMode(TOUCH_CS_3, OUTPUT);
-      digitalWrite(TOUTOUCH_CS_3CH_CS_2, HIGH); // Chip select high (inactive)
+      digitalWrite(TOUCH_CS_3, HIGH); // Chip select high (inactive)
     #endif
     #ifdef TOUCH_CS_4
       pinMode(TOUCH_CS_4, OUTPUT);

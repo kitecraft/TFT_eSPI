@@ -1,11 +1,11 @@
 
 #define ILI9341_DRIVER
 
-#define TFT_CS   13
-#define TOUCH_CS 12
+#define TFT_CS   15
+//#define TOUCH_CS 12
 
-#define TFT_CS_2   5
-#define TOUCH_CS_2 15
+//#define TFT_CS_2   5
+//#define TOUCH_CS_2 15
 
 
 
